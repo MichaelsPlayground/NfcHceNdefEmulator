@@ -42,30 +42,6 @@
             android:hint="Enter plain text for NDEF"
             android:minHeight="48dp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_ndef_button"
-            android:id="@+id/set_ndef_button"
-            android:layout_below="@+id/ndef_text"
-            android:layout_alignEnd="@+id/ndef_text" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_ndef100_button"
-            android:id="@+id/set_ndef100_button"
-            android:layout_below="@+id/set_ndef_button"
-            android:layout_alignEnd="@+id/set_ndef_button" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_ndef500_button"
-            android:id="@+id/set_ndef500_button"
-            android:layout_below="@+id/set_ndef100_button"
-            android:layout_alignEnd="@+id/set_ndef100_button" />
-
     </RelativeLayout>
 
 </FrameLayout>

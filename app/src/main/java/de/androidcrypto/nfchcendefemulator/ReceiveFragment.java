@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
@@ -148,8 +149,8 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
                 String nfcaContent = "IsoDep reading" + "\n";
 
                 // now we run the select command with AID
-                String nfcHecNdefAid = "D2760000850101";
-                byte[] aid = Utils.hexStringToByteArray(nfcHecNdefAid);
+                String nfcHceNdefAid = "D2760000850101";
+                byte[] aid = Utils.hexStringToByteArray(nfcHceNdefAid);
 
                 byte[] command = selectApdu(aid);
                 byte[] responseSelect = isoDep.transceive(command);
@@ -236,7 +237,18 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
                 }
 
                 // Sending ReadBinary, get NDEF data...
-                String sendReadBinaryNdefData = "00b000000f";
+                byte[] ndefLen = Arrays.copyOfRange(responseSendBinaryNlen, 0, 2);
+                byte[] cmdLen = Utils.hexStringToByteArray(sendReadBinaryNlen);
+                int ndefLenInt = new BigInteger(ndefLen).intValue();
+                writeToUiAppend(readResult,"ndefLen: " + Utils.bytesToHex(ndefLen) + " len (dec): " + ndefLenInt);
+                int ndefLenIntRequest = ndefLenInt + 2;
+                //byte[] cmdLenNew = BigInteger.valueOf(ndefLenIntRequest).toByteArray();
+                byte[] cmdLenNew = Utils.convertIntToByteArray(ndefLenIntRequest, 2);
+                writeToUiAppend(readResult,"ndefLen new (dec): " + ndefLenIntRequest + " data: " + Utils.bytesToHex(cmdLenNew) );
+
+                String sendReadBinaryNdefData = "00b000" + Utils.bytesToHex(cmdLenNew);
+                //String sendReadBinaryNdefData = "00b000000f";
+                //String sendReadBinaryNdefData = "00b0000092";
                 command = Utils.hexStringToByteArray(sendReadBinaryNdefData);
                 byte[] responseSendBinaryNdefData = isoDep.transceive(command);
                 writeToUiAppend(readResult, "sendBinaryNdefData: " + Utils.bytesToHex(command));

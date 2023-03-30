@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +42,7 @@ public class SendFragment extends Fragment {
 
     RadioButton rbTimestamp, rbMessage;
     TextView tvTimestamp;
+    boolean isTimestamp = true; // start/default
     com.google.android.material.textfield.TextInputLayout dataToSendLayout;
     com.google.android.material.textfield.TextInputEditText dataToSend;
 
@@ -94,81 +98,41 @@ public class SendFragment extends Fragment {
         rbMessage = getView().findViewById(R.id.rbMessage);
 
         dataToSendLayout = getView().findViewById(R.id.etMainDataToSendsLayout);
+        dataToSendLayout.setEnabled(false);
         dataToSend = getView().findViewById(R.id.etMainDataToSend);
         dataToSendLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String dataToSendString = dataToSend.getText().toString();
-
-
-            }
-        });
-
-
-        Button setNdef = (Button) getView().findViewById(R.id.set_ndef_button);
-        setNdef.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-                // Technically, if this is past our byte limit,
-                // it will cause issues.
-                //
-                // TODO: add validation
-                //
-                TextView getNdefString = (TextView) getView().findViewById(R.id.ndef_text);
-                String test = getNdefString.getText().toString() + " on " +
-                        Utils.getTimestamp();
-
-                Intent intent = new Intent(view.getContext(), MyHostApduService.class);
-                intent.putExtra("ndefMessage", test);
-                System.out.println("*** start ***");
-                getActivity().startService(intent);
-            }
-        });
-
-        Button setNdef100 = (Button) getView().findViewById(R.id.set_ndef100_button);
-        setNdef100.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-                // Technically, if this is past our byte limit,
-                // it will cause issues.
-                //
-                // TODO: add validation
-                //
-                String characters66 = "";
-                for (int i = 0; i < 66; i++) {
-                    characters66 = characters66 + "A";
+                if (TextUtils.isEmpty(dataToSendString)) {
+                    Toast.makeText(view.getContext(), "Enter a message to send", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                String test = characters66 + " on " +
+                String messageWithTimestamp = dataToSendString + " on " +
                         Utils.getTimestamp();
                 Intent intent = new Intent(view.getContext(), MyHostApduService.class);
-                intent.putExtra("ndefMessage", test);
+                intent.putExtra("ndefMessage", messageWithTimestamp);
                 System.out.println("*** start ***");
                 getActivity().startService(intent);
             }
         });
 
-        Button setNdef500 = (Button) getView().findViewById(R.id.set_ndef500_button);
-        setNdef500.setOnClickListener(new View.OnClickListener() {
+        rbTimestamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                //
-                // Technically, if this is past our byte limit,
-                // it will cause issues.
-                //
-                // TODO: add validation
-                //
-                String characters66 = "";
-                for (int i = 0; i < 466; i++) {
-                    characters66 = characters66 + "A";
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (rbTimestamp.isChecked()) {
+                    dataToSendLayout.setEnabled(false);
+                    isTimestamp = true;
                 }
-                String test = characters66 + " on " +
-                        Utils.getTimestamp();
-                Intent intent = new Intent(view.getContext(), MyHostApduService.class);
-                intent.putExtra("ndefMessage", test);
-                System.out.println("*** start ***");
-                getActivity().startService(intent);
+            }
+        });
+        rbMessage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (rbMessage.isChecked()) {
+                    dataToSendLayout.setEnabled(true);
+                    isTimestamp = false;
+                }
             }
         });
 
@@ -183,9 +147,10 @@ public class SendFragment extends Fragment {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                Date dt = Calendar.getInstance().getTime();
-                //Log.d(TAG, "Set time as " + dt.toString());
-                tvTimestamp.setText(dt.toString());
+                if (isTimestamp) {
+                    Date dt = Calendar.getInstance().getTime();
+                    //Log.d(TAG, "Set time as " + dt.toString());
+                    tvTimestamp.setText(dt.toString());
                 /*
                 if (t != null) {
                     runOnUiThread(new Runnable() {
@@ -195,13 +160,14 @@ public class SendFragment extends Fragment {
                     });
                 }*/
 
-                if (pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)) {
-                    //Intent intent = new Intent(context, CardService.class);
-                    Intent intent = new Intent(context, MyHostApduService.class);
-                    intent.putExtra("ndefMessage", dt.toString());
-                    //intent.putExtra("ndefMessage", test);
-                    // Log.d(TAG, intent.toString());
-                    context.startService(intent);
+                    if (pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)) {
+                        //Intent intent = new Intent(context, CardService.class);
+                        Intent intent = new Intent(context, MyHostApduService.class);
+                        intent.putExtra("ndefMessage", dt.toString());
+                        //intent.putExtra("ndefMessage", test);
+                        // Log.d(TAG, intent.toString());
+                        context.startService(intent);
+                    }
                 }
             }
 

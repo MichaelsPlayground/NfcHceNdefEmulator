@@ -99,6 +99,15 @@ public class Utils {
         return output;
     }
 
+    public static byte[] convertIntToByteArray(int value, int numberOfBytes) {
+        byte b[] = new byte[numberOfBytes];
+        int i, shift;
+        for (i = 0, shift = (b.length - 1) * 8; i < b.length; i++, shift -= 8) {
+            b[i] = (byte) (0xFF & (value >> shift));
+        }
+        return b;
+    }
+
     public static String parseTextrecordPayload(byte[] ndefPayload) {
         int languageCodeLength = Array.getByte(ndefPayload, 0);
         int ndefPayloadLength = ndefPayload.length;

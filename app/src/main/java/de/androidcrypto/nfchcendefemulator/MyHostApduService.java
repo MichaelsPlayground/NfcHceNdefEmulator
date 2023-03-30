@@ -111,14 +111,16 @@ public class MyHostApduService extends HostApduService {
         mNdefSelected = false;
 
         // default NDEF-message
-        final String URL = "http://brightechno.com/blog/"; // will be overwritten by intent from MainActivity
-        NdefRecord record = NdefRecord.createUri(URL);
-        NdefMessage ndefMessage = new NdefMessage(record);
-        int nlen = ndefMessage.getByteArrayLength();
+        final String DEFAULT_MESSAGE = "This is the default message from NfcHceNdelEmulator. If you want to change the message use the tab 'Send' to enter an individual message.";
+        NdefMessage ndefDefaultMessage = getNdefMessage(DEFAULT_MESSAGE);
+        //final String URL = "http://brightechno.com/blog/"; // will be overwritten by intent from MainActivity
+        //NdefRecord record = NdefRecord.createUri(URL);
+        //NdefMessage ndefMessage = new NdefMessage(record);
+        int nlen = ndefDefaultMessage.getByteArrayLength();
         mNdefRecordFile = new byte[nlen + 2];
         mNdefRecordFile[0] = (byte)((nlen & 0xff00) / 256);
         mNdefRecordFile[1] = (byte)(nlen & 0xff);
-        System.arraycopy(ndefMessage.toByteArray(), 0, mNdefRecordFile, 2, ndefMessage.getByteArrayLength());
+        System.arraycopy(ndefDefaultMessage.toByteArray(), 0, mNdefRecordFile, 2, ndefDefaultMessage.getByteArrayLength());
     }
 
     @Override
@@ -156,12 +158,12 @@ public class MyHostApduService extends HostApduService {
             mAppSelected = true;
             mCcSelected = false;
             mNdefSelected = false;
-            return SUCCESS_SW; // 成功
+            return SUCCESS_SW;
             // check if commandApdu qualifies for SELECT_CAPABILITY_CONTAINER
         } else if (mAppSelected && Arrays.equals(SELECT_CAPABILITY_CONTAINER, commandApdu)) {
             mCcSelected = true;
             mNdefSelected = false;
-            return SUCCESS_SW; // 成功
+            return SUCCESS_SW;
             // check if commandApdu qualifies for SELECT_NDEF_FILE
         } else if (mAppSelected && Arrays.equals(SELECT_NDEF_FILE, commandApdu)) {
             // NDEF
@@ -172,6 +174,7 @@ public class MyHostApduService extends HostApduService {
         } else if (commandApdu[0] == (byte)0x00 && commandApdu[1] == (byte)0xb0) {
             // READ_BINARY
             // get the offset an le (length) data
+            System.out.println("** " + Utils.bytesToHex(commandApdu) + " in else if (commandApdu[0] == (byte)0x00 && commandApdu[1] == (byte)0xb0) {");
             int offset = (0x00ff & commandApdu[2]) * 256 + (0x00ff & commandApdu[3]);
             int le = 0x00ff & commandApdu[4];
 

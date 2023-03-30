@@ -89,7 +89,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMainDataToSend"
                     android:layout_width="match_parent"
-                    android:layout_height="41dp"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:inputType="text"
                     android:maxLength="200"

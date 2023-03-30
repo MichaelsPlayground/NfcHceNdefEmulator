@@ -1,6 +1,8 @@
 package de.androidcrypto.nfchcendefemulator;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +36,11 @@ public class SendFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    RadioButton rbTimestamp, rbMessage;
+    TextView tvTimestamp;
+    com.google.android.material.textfield.TextInputLayout dataToSendLayout;
+    com.google.android.material.textfield.TextInputEditText dataToSend;
 
     public SendFragment() {
         // Required empty public constructor
@@ -73,33 +86,24 @@ public class SendFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        /*
-        com.google.android.material.textfield.TextInputLayout dataToSendLayout;
-        com.google.android.material.textfield.TextInputEditText dataToSend;
-        dataToSendLayout = findViewById(R.id.etMainDataToSendsLayout);
-        dataToSend = findViewById(R.id.etMainDataToSend);
+
+        //com.google.android.material.textfield.TextInputLayout dataToSendLayout;
+        //com.google.android.material.textfield.TextInputEditText dataToSend;
+        tvTimestamp = getView().findViewById(R.id.tvTimestamp);
+        rbTimestamp = getView().findViewById(R.id.rbTimestamp);
+        rbMessage = getView().findViewById(R.id.rbMessage);
+
+        dataToSendLayout = getView().findViewById(R.id.etMainDataToSendsLayout);
+        dataToSend = getView().findViewById(R.id.etMainDataToSend);
         dataToSendLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bluetoothHandler != null) {
-                    if (peripheralMacAddress != null) {
+                String dataToSendString = dataToSend.getText().toString();
 
-
-                        if (peripheralMacAddress.length() > 16) {
-                            String dataToSendString = dataToSend.getText().toString();
-                            Log.i("Main", "send data");
-                            bluetoothHandler.sendData(peripheralMacAddress, dataToSendString);
-                            System.out.println("*** sendData: " + dataToSendString);
-                            // clear edittext
-                            dataToSend.setText("");
-                            // todo implement a recyclerview
-                        }
-                    }
-                }
 
             }
         });
-*/
+
 
         Button setNdef = (Button) getView().findViewById(R.id.set_ndef_button);
         setNdef.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +171,45 @@ public class SendFragment extends Fragment {
                 getActivity().startService(intent);
             }
         });
+
+        // start with timestamp
+        ndefWithTimestamp(view.getContext());
     }
 
+    private void ndefWithTimestamp(Context context) {
+        PackageManager pm = context.getPackageManager();
+        Timer t = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Date dt = Calendar.getInstance().getTime();
+                //Log.d(TAG, "Set time as " + dt.toString());
+                tvTimestamp.setText(dt.toString());
+                /*
+                if (t != null) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            tvTimestamp.setText(dt.toString());
+                        }
+                    });
+                }*/
+
+                if (pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)) {
+                    //Intent intent = new Intent(context, CardService.class);
+                    Intent intent = new Intent(context, MyHostApduService.class);
+                    intent.putExtra("ndefMessage", dt.toString());
+                    //intent.putExtra("ndefMessage", test);
+                    // Log.d(TAG, intent.toString());
+                    context.startService(intent);
+                }
+            }
+
+        };
+        //t.scheduleAtFixedRate(task, 0, 1000); // every second
+        //t.scheduleAtFixedRate(task, 0, 60000); // every minute
+        t.scheduleAtFixedRate(task, 0, 2000); // every minute
+    }
 
 
     @Override

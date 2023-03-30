@@ -1,0 +1,21 @@
+<!-- sample_menu.xml -->
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- https://fonts.google.com/icons?selected=Material+Icons -->
+
+    <item
+        android:id="@+id/action_export_mail"
+        android:icon="@drawable/ic_outline_attach_email_24"
+        android:title="Export Mail"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_export_file"
+        android:icon="@drawable/ic_outline_file_download_24"
+        android:title="Export File"
+        app:showAsAction="never"/>
+
+
+</menu>

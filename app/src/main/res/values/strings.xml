@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Nfc HCE Ndef Emulator</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="servicedesc">NFC_HCE_NDEF_EMULATOR</string>
+    <string name="aiddescription">NFC HCE NDEF Emulator</string>
+    <string name="header_sender">Emulate NFC Forum Type-4 tag with a NDEF message.\nTo read the message you need a separate reader app running on a second device.</string>
+    <string name="description_sender">This example emulates a type-4 tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command.</string>
+    <string name="set_ndef_button">Set text for NDEF</string>
+    <string name="set_ndef100_button">set NDEF text with 100 characters</string>
+    <string name="set_ndef500_button">set NDEF text with 500 characters</string>
+
+    <string name="header_receiver">This app reads an NDEF message from an emulated NFC tag. For sending you need a separate sender app running on a second device.</string>
+    <string name="description_receiver">This example expects a class 4 type tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command. When a tag is discovered the data from all pages will be read.</string>
+    <string name="nfc_result">NFC read result</string>
+</resources>

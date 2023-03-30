@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_outline_home_24"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/send"
+        android:icon="@drawable/ic_outline_send_to_mobile_24"
+        android:title="Send" />
+
+    <item
+        android:id="@+id/receive"
+        android:icon="@drawable/ic_outline_add_to_home_screen_24"
+        android:title="Receive" />
+</menu>

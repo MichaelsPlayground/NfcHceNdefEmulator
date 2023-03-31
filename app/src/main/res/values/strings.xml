@@ -7,7 +7,8 @@
     <string name="header_sender">Emulate NFC Forum Type-4 tag with a NDEF message.\nTo read the message you need a separate reader app running on a second device.</string>
     <string name="description_sender">This example emulates a type-4 tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command.</string>
 
-    <string name="header_receiver">This app reads an NDEF message from an emulated NFC tag. For sending you need a separate sender app running on a second device.</string>
+    <string name="header_receiver">This app reads an NDEF message from an emulated NFC tag using Ndef protocol. For sending you need a separate sender app running on a second device.</string>
+    <string name="header_receiver_extended">This app reads an NDEF message from an emulated NFC tag using IsoDep protocol and low level API. For sending you need a separate sender app running on a second device.</string>
     <string name="description_receiver">This example expects a class 4 type tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command. When a tag is discovered the data from all pages will be read.</string>
     <string name="nfc_result">NFC read result</string>
 </resources>

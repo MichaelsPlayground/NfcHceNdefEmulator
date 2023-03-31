@@ -10,6 +10,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,14 +84,14 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        contextSave = getActivity().getApplicationContext();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this.getContext());
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         readResult = getView().findViewById(R.id.tvReceiveReadResult);
-        doVibrate();
+        //doVibrate();
     }
 
     @Override
@@ -99,7 +101,7 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
         return inflater.inflate(R.layout.fragment_receive, container, false);
     }
 
-    // This method is run in another thread when a card is discovered
+    // This method is running in another thread when a card is discovered
     // !!!! This method cannot cannot direct interact with the UI Thread
     // Use `runOnUiThread` method to change the UI from this method
     @Override
@@ -108,236 +110,67 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
         // in this example the card should be an Ndef Technology Type
 
         System.out.println("NFC tag discovered");
-        getActivity().runOnUiThread(() -> {
+        requireActivity().runOnUiThread(() -> {
             readResult.setText("");
         });
 
-        IsoDep isoDep = null;
-        writeToUiAppend(readResult, "Tag found");
-        String[] techList = tag.getTechList();
-        for (int i = 0; i < techList.length; i++) {
-            writeToUiAppend(readResult, "TechList: " + techList[i]);
-        }
-        String tagId = Utils.bytesToHex(tag.getId());
-        writeToUiAppend(readResult, "TagId: " + tagId);
+        Ndef mNdef = Ndef.get(tag);
+        if (mNdef != null) {
 
-        try {
-            isoDep = IsoDep.get(tag);
-
-            if (isoDep != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(this.getContext(),
-                            "NFC tag is IsoDep compatible",
-                            Toast.LENGTH_SHORT).show();
-                });
-
-                // Make a Sound
-/*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    ((Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, 10));
-                } else {
-                    Vibrator v = (Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE);
-                    v.vibrate(200);
-                }
-
- */
-
-
-                isoDep.connect();
-                dumpExportString = "";
-                getActivity().runOnUiThread(() -> {
-                    //readResult.setText("");
-                });
-
-
-                writeToUiAppend(readResult, "IsoDep reading");
-                String nfcaContent = "IsoDep reading" + "\n";
-
-                // now we run the select command with AID
-                String nfcHceNdefAid = "D2760000850101";
-                byte[] aid = Utils.hexStringToByteArray(nfcHceNdefAid);
-
-                byte[] command = selectApdu(aid);
-                byte[] responseSelect = isoDep.transceive(command);
-                writeToUiAppend(readResult, "selectApdu with AID: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "selectApdu response: " + Utils.bytesToHex(responseSelect));
-
-                if (responseSelect == null) {
-                    writeToUiAppend(readResult, "selectApdu with AID fails (null)");
-                } else {
-                    writeToUiAppend(readResult, "responseSelect length: " + responseSelect.length + " data: " + Utils.bytesToHex(responseSelect));
-                    System.out.println("responseSelect: " + Utils.bytesToHex(responseSelect));
-                }
-
-                if (!Utils.isSucceed(responseSelect)) {
-                    writeToUiAppend(readResult, "responseSelect is not 90 00 - aborted");
-                    System.out.println("responseSelect is not 90 00 - aborted ");
-                    return;
-                }
-
-                // sending cc select = get the capability container
-                String selectCapabilityContainer = "00a4000c02e103";
-                command = Utils.hexStringToByteArray(selectCapabilityContainer);
-                byte[] responseSelectCc = isoDep.transceive(command);
-                writeToUiAppend(readResult, "select CC: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "select CC response: " + Utils.bytesToHex(responseSelectCc));
-                writeToUiAppend(readResult, "responseSelect length: " + responseSelectCc.length + " data: " + Utils.bytesToHex(responseSelectCc));
-                System.out.println("responseSelectCc: " + Utils.bytesToHex(responseSelectCc));
-
-                if (!Utils.isSucceed(responseSelectCc)) {
-                    writeToUiAppend(readResult, "responseSelectCc is not 90 00 - aborted");
-                    System.out.println("responseSelectCc is not 90 00 - aborted ");
-                    return;
-                }
-
-                // Sending ReadBinary from CC...
-                String sendBinareFromCc = "00b000000f";
-                command = Utils.hexStringToByteArray(sendBinareFromCc);
-                byte[] responseSendBinaryFromCc = isoDep.transceive(command);
-                writeToUiAppend(readResult, "sendBinaryFromCc: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "sendBinaryFromCc response: " + Utils.bytesToHex(responseSendBinaryFromCc));
-                writeToUiAppend(readResult, "sendBinaryFromCc response length: " + responseSendBinaryFromCc.length + " data: " + Utils.bytesToHex(responseSendBinaryFromCc));
-                System.out.println("sendBinaryFromCc response: " + Utils.bytesToHex(responseSendBinaryFromCc));
-
-                if (!Utils.isSucceed(responseSendBinaryFromCc)) {
-                    writeToUiAppend(readResult, "responseSendBinaryFromCc is not 90 00 - aborted");
-                    System.out.println("responseSendBinaryFromCc is not 90 00 - aborted ");
-                    return;
-                }
-
-                // Capability Container header:
-                byte[] capabilityContainerHeader = Arrays.copyOfRange(responseSendBinaryFromCc, 0, responseSendBinaryFromCc.length - 2);
-                writeToUiAppend(readResult, "capabilityContainerHeader length: " + capabilityContainerHeader.length + " data: " + Utils.bytesToHex(capabilityContainerHeader));
-                System.out.println("capabilityContainerHeader: " + Utils.bytesToHex(capabilityContainerHeader));
-                System.out.println("capabilityContainerHeader: " + new String(capabilityContainerHeader));
-
-                // Sending NDEF Select...
-                String sendNdefSelect = "00a4000c02e104";
-                command = Utils.hexStringToByteArray(sendNdefSelect);
-                byte[] responseSendNdefSelect = isoDep.transceive(command);
-                writeToUiAppend(readResult, "sendNdefSelect: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "sendNdefSelect response: " + Utils.bytesToHex(responseSendNdefSelect));
-                writeToUiAppend(readResult, "sendNdefSelect response length: " + responseSendNdefSelect.length + " data: " + Utils.bytesToHex(responseSendNdefSelect));
-                System.out.println("sendNdefSelect response: " + Utils.bytesToHex(responseSendNdefSelect));
-
-                if (!Utils.isSucceed(responseSendNdefSelect)) {
-                    writeToUiAppend(readResult, "responseSendNdefSelect is not 90 00 - aborted");
-                    System.out.println("responseSendNdefSelect is not 90 00 - aborted ");
-                    return;
-                }
-
-                // Sending ReadBinary NLEN...
-                String sendReadBinaryNlen = "00b0000002";
-                command = Utils.hexStringToByteArray(sendReadBinaryNlen);
-                byte[] responseSendBinaryNlen = isoDep.transceive(command);
-                writeToUiAppend(readResult, "sendBinaryNlen: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "sendBinaryNlen response: " + Utils.bytesToHex(responseSendBinaryNlen));
-                writeToUiAppend(readResult, "sendBinaryNlen response length: " + responseSendBinaryNlen.length + " data: " + Utils.bytesToHex(responseSendBinaryNlen));
-                System.out.println("sendBinaryNlen response: " + Utils.bytesToHex(responseSendBinaryNlen));
-
-                if (!Utils.isSucceed(responseSendBinaryNlen)) {
-                    writeToUiAppend(readResult, "responseSendBinaryNlen is not 90 00 - aborted");
-                    System.out.println("responseSendBinaryNlen is not 90 00 - aborted ");
-                    return;
-                }
-
-                // Sending ReadBinary, get NDEF data...
-                byte[] ndefLen = Arrays.copyOfRange(responseSendBinaryNlen, 0, 2);
-                byte[] cmdLen = Utils.hexStringToByteArray(sendReadBinaryNlen);
-                int ndefLenInt = new BigInteger(ndefLen).intValue();
-                writeToUiAppend(readResult,"ndefLen: " + Utils.bytesToHex(ndefLen) + " len (dec): " + ndefLenInt);
-                int ndefLenIntRequest = ndefLenInt + 2;
-                //byte[] cmdLenNew = BigInteger.valueOf(ndefLenIntRequest).toByteArray();
-                byte[] cmdLenNew = Utils.convertIntToByteArray(ndefLenIntRequest, 2);
-                writeToUiAppend(readResult,"ndefLen new (dec): " + ndefLenIntRequest + " data: " + Utils.bytesToHex(cmdLenNew) );
-
-                String sendReadBinaryNdefData = "00b000" + Utils.bytesToHex(cmdLenNew);
-                //String sendReadBinaryNdefData = "00b000000f";
-                //String sendReadBinaryNdefData = "00b0000092";
-                command = Utils.hexStringToByteArray(sendReadBinaryNdefData);
-                byte[] responseSendBinaryNdefData = isoDep.transceive(command);
-                writeToUiAppend(readResult, "sendBinaryNdefData: " + Utils.bytesToHex(command));
-                writeToUiAppend(readResult, "sendBinaryNdefData response: " + Utils.bytesToHex(responseSendBinaryNdefData));
-                writeToUiAppend(readResult, "sendBinaryNdefData response length: " + responseSendBinaryNdefData.length + " data: " + Utils.bytesToHex(responseSendBinaryNdefData));
-                writeToUiAppend(readResult, "sendBinaryNdefData response: " + new String(responseSendBinaryNdefData));
-                System.out.println("sendBinaryNdefData response: " + Utils.bytesToHex(responseSendBinaryNdefData));
-                System.out.println("sendBinaryNdefData response: " + new String(responseSendBinaryNdefData));
-
-                if (!Utils.isSucceed(responseSendBinaryNdefData)) {
-                    writeToUiAppend(readResult, "responseSendBinaryNdefData is not 90 00 - aborted");
-                    System.out.println("responseSendBinaryNdefData is not 90 00 - aborted ");
-                    return;
-                }
-
-                byte[] ndefMessage = Arrays.copyOfRange(responseSendBinaryNdefData, 0, responseSendBinaryNdefData.length - 2);
-                writeToUiAppend(readResult, "ndefMessage length: " + ndefMessage.length + " data: " + Utils.bytesToHex(ndefMessage));
-                writeToUiAppend(readResult, "ndefMessage: " + new String(ndefMessage));
-                System.out.println("ndefMessage: " + new String(ndefMessage));
-
-                // strip off the first 2 bytes
-                byte[] ndefMessageStrip = Arrays.copyOfRange(ndefMessage, 9, ndefMessage.length);
-
-                //String ndefMessageParsed = Utils.parseTextrecordPayload(ndefMessageStrip);
-                String ndefMessageParsed = new String(ndefMessageStrip);
-                writeToUiAppend(readResult, "ndefMessage parsed: " + ndefMessageParsed);
-                System.out.println("ndefMessage parsed: " + ndefMessageParsed);
-
-                // try to get a NdefMessage from the byte array
-                byte[] ndefMessageByteArray = Arrays.copyOfRange(ndefMessage, 2, ndefMessage.length);
-                try {
-                    NdefMessage ndefMessageFromTag = new NdefMessage(ndefMessageByteArray);
-                    NdefRecord[] ndefRecords = ndefMessageFromTag.getRecords();
-                    NdefRecord ndefRecord;
-                    int ndefRecordsCount = ndefRecords.length;
-                    if (ndefRecordsCount > 0) {
-                        for (int i = 0; i < ndefRecordsCount; i++) {
-                            short ndefTnf = ndefRecords[i].getTnf();
-                            byte[] ndefType = ndefRecords[i].getType();
-                            byte[] ndefPayload = ndefRecords[i].getPayload();
-                            // here we are trying to parse the content
-                            // Well known type - Text
-                            if (ndefTnf == NdefRecord.TNF_WELL_KNOWN &&
-                                    Arrays.equals(ndefType, NdefRecord.RTD_TEXT)) {
-                                writeToUiAppend(readResult, "rec: " + i +
-                                        " Well known Text payload\n" + new String(ndefPayload) + " \n");
-                                writeToUiAppend(readResult, Utils.parseTextrecordPayload(ndefPayload));
-                            }
-                            // Well known type - Uri
-                            if (ndefTnf == NdefRecord.TNF_WELL_KNOWN &&
-                                    Arrays.equals(ndefType, NdefRecord.RTD_URI)) {
-                                writeToUiAppend(readResult, "rec: " + i +
-                                        " Well known Uri payload\n" + new String(ndefPayload) + " \n");
-                                writeToUiAppend(readResult, Utils.parseUrirecordPayload(ndefPayload) + " \n");
-                            }
-                        }
-                        dumpExportString = readResult.getText().toString();
+            // If we want to read
+            // As we did not turn on the NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK
+            // We can get the cached Ndef message the system read for us.
+            NdefMessage mNdefMessage = mNdef.getCachedNdefMessage();
+            NdefRecord[] record = mNdefMessage.getRecords();
+            int ndefRecordsCount = record.length;
+            if (ndefRecordsCount > 0) {
+                String ndefText = "";
+                for (int i = 0; i < ndefRecordsCount; i++) {
+                    short ndefTnf = record[i].getTnf();
+                    byte[] ndefType = record[i].getType();
+                    byte[] ndefPayload = record[i].getPayload();
+                    // here we are trying to parse the content
+                    // Well known type - Text
+                    if (ndefTnf == NdefRecord.TNF_WELL_KNOWN &&
+                            Arrays.equals(ndefType, NdefRecord.RTD_TEXT)) {
+                        ndefText = ndefText + "\n" + "rec: " + i +
+                                " Well known Text payload\n" + new String(ndefPayload) + " \n";
+                        ndefText = ndefText + Utils.parseTextrecordPayload(ndefPayload) + " \n";
                     }
-                    //dumpExportString = readResult.getText().toString();
+                    // Well known type - Uri
+                    if (ndefTnf == NdefRecord.TNF_WELL_KNOWN &&
+                            Arrays.equals(ndefType, NdefRecord.RTD_URI)) {
+                        ndefText = ndefText + "\n" + "rec: " + i +
+                                " Well known Uri payload\n" + new String(ndefPayload) + " \n";
+                        ndefText = ndefText + Utils.parseUrirecordPayload(ndefPayload) + " \n";
+                    }
 
-                } catch (FormatException e) {
-                    e.printStackTrace();
+                    // TNF 2 Mime Media
+                    if (ndefTnf == NdefRecord.TNF_MIME_MEDIA) {
+                        ndefText = ndefText + "\n" + "rec: " + i +
+                                " TNF Mime Media  payload\n" + new String(ndefPayload) + " \n";
+                        ndefText = ndefText + "TNF Mime Media  type\n" + new String(ndefType) + " \n";
+                    }
+                    // TNF 4 External type
+                    if (ndefTnf == NdefRecord.TNF_EXTERNAL_TYPE) {
+                        ndefText = ndefText + "\n" + "rec: " + i +
+                                " TNF External type payload\n" + new String(ndefPayload) + " \n";
+                        ndefText = ndefText + "TNF External type type\n" + new String(ndefType) + " \n";
+                    }
+                    String finalNdefText = ndefText;
+                    getActivity().runOnUiThread(() -> {
+                        readResult.setText(finalNdefText);
+                    });
+
                 }
-                doVibrate();
-            } else {
-                writeToUiAppend(readResult, "IsoDep == null");
             }
-        } catch (IOException e) {
-            writeToUiAppend(readResult, "ERROR IOException: " + e);
-            e.printStackTrace();
-        }
-    }
+        } else {
+            getActivity().runOnUiThread(() -> {
+                readResult.setText("There was an error in NDEF data");
+            });
 
-    // https://stackoverflow.com/a/51338700/8166854
-    private byte[] selectApdu(byte[] aid) {
-        byte[] commandApdu = new byte[6 + aid.length];
-        commandApdu[0] = (byte) 0x00;  // CLA
-        commandApdu[1] = (byte) 0xA4;  // INS
-        commandApdu[2] = (byte) 0x04;  // P1
-        commandApdu[3] = (byte) 0x00;  // P2
-        commandApdu[4] = (byte) (aid.length & 0x0FF);       // Lc
-        System.arraycopy(aid, 0, commandApdu, 5, aid.length);
-        commandApdu[commandApdu.length - 1] = (byte) 0x00;  // Le
-        return commandApdu;
+        }
+        doVibrate();
     }
 
     private void doVibrate() {
@@ -349,29 +182,6 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
                 v.vibrate(200);
             }
         }
-    }
-
-    private void writeToUiAppend(TextView textView, String message) {
-        getActivity().runOnUiThread(() -> {
-            String newString = textView.getText().toString() + "\n" + message;
-            textView.setText(newString);
-            dumpExportString = newString;
-        });
-    }
-
-    private void writeToUiAppendReverse(TextView textView, String message) {
-        getActivity().runOnUiThread(() -> {
-            String newString = message + "\n" + textView.getText().toString();
-            textView.setText(newString);
-        });
-    }
-
-    private void writeToUiToast(String message) {
-        getActivity().runOnUiThread(() -> {
-            Toast.makeText(this.getContext(),
-                    message,
-                    Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void showWirelessSettings() {

@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             selectedFragment = new SendFragment();
         } else if (itemId == R.id.receive) {
             selectedFragment = new ReceiveFragment();
+        } else if (itemId == R.id.receive_extended) {
+            selectedFragment = new ReceiveExtendedFragment();
         }
         // It will help to replace the
         // one fragment to other.

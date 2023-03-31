@@ -89,7 +89,7 @@ public class MyHostApduService extends HostApduService {
             0x00, 0x34, // Maximum C-APDU data size
             0x04, 0x06, // Tag & Length
             (byte)0xe1, 0x04, // NDEF File Identifier
-            (byte) 0xff, (byte) 0xfe, // Maximum NDEF size
+            (byte) 0x00, (byte) 0xff, // Maximum NDEF size, do NOT extend this value
             0x00, // NDEF file read access granted
             (byte)0xff, // NDEF File write access denied
     };
@@ -113,9 +113,7 @@ public class MyHostApduService extends HostApduService {
         // default NDEF-message
         final String DEFAULT_MESSAGE = "This is the default message from NfcHceNdelEmulator. If you want to change the message use the tab 'Send' to enter an individual message.";
         NdefMessage ndefDefaultMessage = getNdefMessage(DEFAULT_MESSAGE);
-        //final String URL = "http://brightechno.com/blog/"; // will be overwritten by intent from MainActivity
-        //NdefRecord record = NdefRecord.createUri(URL);
-        //NdefMessage ndefMessage = new NdefMessage(record);
+        // the maximum length is 246 so do not extend this value
         int nlen = ndefDefaultMessage.getByteArrayLength();
         mNdefRecordFile = new byte[nlen + 2];
         mNdefRecordFile[0] = (byte)((nlen & 0xff00) / 256);

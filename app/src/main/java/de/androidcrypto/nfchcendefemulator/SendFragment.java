@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,7 +43,7 @@ public class SendFragment extends Fragment {
 
     RadioButton rbTimestamp, rbMessage;
     TextView tvTimestamp;
-    boolean isTimestamp = true; // start/default
+    boolean isTimestamp = false; // start/default
     com.google.android.material.textfield.TextInputLayout dataToSendLayout;
     com.google.android.material.textfield.TextInputEditText dataToSend;
 
@@ -90,9 +91,6 @@ public class SendFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-
-        //com.google.android.material.textfield.TextInputLayout dataToSendLayout;
-        //com.google.android.material.textfield.TextInputEditText dataToSend;
         tvTimestamp = getView().findViewById(R.id.tvTimestamp);
         rbTimestamp = getView().findViewById(R.id.rbTimestamp);
         rbMessage = getView().findViewById(R.id.rbMessage);
@@ -113,7 +111,7 @@ public class SendFragment extends Fragment {
                 Intent intent = new Intent(view.getContext(), MyHostApduService.class);
                 intent.putExtra("ndefMessage", messageWithTimestamp);
                 Toast.makeText(view.getContext(), "This message is send as NDEF message: " + messageWithTimestamp, Toast.LENGTH_SHORT).show();
-                getActivity().startService(intent);
+                requireActivity().startService(intent);
             }
         });
 
@@ -123,6 +121,7 @@ public class SendFragment extends Fragment {
                 if (rbTimestamp.isChecked()) {
                     dataToSendLayout.setEnabled(false);
                     isTimestamp = true;
+                    Toast.makeText(view.getContext(), "An actual is send as NDEF message", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -151,21 +150,9 @@ public class SendFragment extends Fragment {
                     Date dt = Calendar.getInstance().getTime();
                     //Log.d(TAG, "Set time as " + dt.toString());
                     tvTimestamp.setText(dt.toString());
-                /*
-                if (t != null) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            tvTimestamp.setText(dt.toString());
-                        }
-                    });
-                }*/
-
                     if (pm.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)) {
-                        //Intent intent = new Intent(context, CardService.class);
                         Intent intent = new Intent(context, MyHostApduService.class);
                         intent.putExtra("ndefMessage", dt.toString());
-                        //intent.putExtra("ndefMessage", test);
-                        // Log.d(TAG, intent.toString());
                         context.startService(intent);
                     }
                 }
@@ -174,7 +161,7 @@ public class SendFragment extends Fragment {
         };
         //t.scheduleAtFixedRate(task, 0, 1000); // every second
         //t.scheduleAtFixedRate(task, 0, 60000); // every minute
-        t.scheduleAtFixedRate(task, 0, 2000); // every minute
+        t.scheduleAtFixedRate(task, 0, 2000); // every 2 seconds
     }
 
 

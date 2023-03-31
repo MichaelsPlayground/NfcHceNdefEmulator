@@ -14,5 +14,10 @@
     <item
         android:id="@+id/receive"
         android:icon="@drawable/ic_outline_add_to_home_screen_24"
-        android:title="Receive" />
+        android:title="Read" />
+
+    <item
+        android:id="@+id/receive_extended"
+        android:icon="@drawable/outline_data_exploration_24"
+        android:title="Read Ext" />
 </menu>

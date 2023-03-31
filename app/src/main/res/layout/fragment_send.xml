@@ -44,7 +44,6 @@
                 android:id="@+id/rbTimestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="uses the actual timestamp"
                 android:textSize="16sp" />
 
@@ -60,7 +59,7 @@
                 android:id="@+id/rbMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="use an individual message"
+                android:text="use an individual message, a static timestamp will be added"
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout

@@ -11,7 +11,7 @@ Android devices with Android 9 and Android 13.
 There are 3 main functionalities:
 
 1) Send a message using HCE to another device in NDEF format
-2) read a message using the Android's NFC reader and reading an incoming intent with NDEF data using NDEF protocol (hign level API)
+2) read a message using the Android's NFC reader and reading an incoming intent with NDEF data using NDEF protocol (high level API)
 3) read a message using the Android's NFC reader and run the complete reading sequence using IsoDep protocol (low level API)
 
 As there are very less articles and source code for NDEF emulation via HCE available on the Internet I was very happy 
@@ -26,9 +26,11 @@ https://github.com/TechBooster/C85-Android-4.4-Sample/blob/master/chapter08/Ndef
 As the source code of the service class is under **Apache License 2.0** my app got the same license.
 
 Note: please keep in mind that **the app is active since installation** as it runs a **HostApduService**. If there are other apps 
-on your phone providing data for NFC - AID "D2760000850101" (NDEF access) you can run into problems ("routing conflict") that needs 
+on your phone providing data for NFC - AID "**D2760000850101**" (NDEF access) you can run into problems ("routing conflict") that needs 
 to get solved each time a card reader is tapped to the device. On your device is under the "Settings menu" an entry 
 "Connections" - "NFC" - "Payments" (or similar) and a sub-tab "others" - there you can choose which services are active at 
 one time.
+
+
 
 

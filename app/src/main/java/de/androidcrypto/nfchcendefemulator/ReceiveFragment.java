@@ -1,5 +1,7 @@
 package de.androidcrypto.nfchcendefemulator;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.FormatException;
@@ -87,6 +89,7 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         readResult = getView().findViewById(R.id.tvReceiveReadResult);
+        doVibrate();
     }
 
     @Override
@@ -129,13 +132,15 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
                 });
 
                 // Make a Sound
-
+/*
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ((Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, 10));
                 } else {
-                    Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                    Vibrator v = (Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE);
                     v.vibrate(200);
                 }
+
+ */
 
 
                 isoDep.connect();
@@ -312,6 +317,7 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
                 } catch (FormatException e) {
                     e.printStackTrace();
                 }
+                doVibrate();
             } else {
                 writeToUiAppend(readResult, "IsoDep == null");
             }
@@ -332,6 +338,17 @@ public class ReceiveFragment extends Fragment implements NfcAdapter.ReaderCallba
         System.arraycopy(aid, 0, commandApdu, 5, aid.length);
         commandApdu[commandApdu.length - 1] = (byte) 0x00;  // Le
         return commandApdu;
+    }
+
+    private void doVibrate() {
+        if (getActivity() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ((Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, 10));
+            } else {
+                Vibrator v = (Vibrator) getActivity().getSystemService(VIBRATOR_SERVICE);
+                v.vibrate(200);
+            }
+        }
     }
 
     private void writeToUiAppend(TextView textView, String message) {

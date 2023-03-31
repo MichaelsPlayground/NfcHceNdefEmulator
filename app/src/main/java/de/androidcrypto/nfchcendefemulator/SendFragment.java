@@ -113,6 +113,7 @@ public class SendFragment extends Fragment {
                 Intent intent = new Intent(view.getContext(), MyHostApduService.class);
                 intent.putExtra("ndefMessage", messageWithTimestamp);
                 System.out.println("*** start ***");
+                Toast.makeText(view.getContext(), "This message is send as NDEF message: " + messageWithTimestamp, Toast.LENGTH_SHORT).show();
                 getActivity().startService(intent);
             }
         });

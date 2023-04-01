@@ -5,10 +5,11 @@
     <string name="servicedesc">NFC_HCE_NDEF_EMULATOR</string>
     <string name="aiddescription">NFC HCE NDEF Emulator</string>
     <string name="header_sender">Emulate NFC Forum Type-4 tag with a NDEF message.\nTo read the message you need a separate reader app running on a second device.</string>
-    <string name="description_sender">This example emulates a type-4 tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command.</string>
+    <string name="description_sender">This example emulates a type-4 tag with an NDEF record (RTD_TEXT).\nIt uses an aid-filter D2760000850101 for the APDU SELECT command.</string>
 
     <string name="header_receiver">This app reads an NDEF message from an emulated NFC tag using Ndef protocol. For sending you need a separate sender app running on a second device.</string>
     <string name="header_receiver_extended">This app reads an NDEF message from an emulated NFC tag using IsoDep protocol and low level API. For sending you need a separate sender app running on a second device.</string>
-    <string name="description_receiver">This example expects a class 4 type tag with an NDEF record (RTD_TEXT). It uses an aid-filter D2760000850101 for the APDU SELECT command. When a tag is discovered the data from all pages will be read.</string>
+    <string name="description_receiver">This example expects a class 4 type tag with an NDEF record (RTD_TEXT).\nIt uses an aid-filter D2760000850101 for the APDU SELECT command.\nWhen a tag is discovered the data from all pages will be read.</string>
     <string name="nfc_result">NFC read result</string>
+    <string name="home_description">This application emulates an NFC card with an NDEF tag (sender) and a receiver for this NDEF tag (reader). Please choose with the menu below.\n\nThis app is using the official AID D2760000850101 for a tag that contains an NDEF message.</string>
 </resources>

@@ -41,11 +41,13 @@ public class SendFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    RadioButton rbTimestamp, rbMessage;
+    RadioButton rbTimestamp, rbMessage, rbUrl;
     TextView tvTimestamp;
     boolean isTimestamp = false; // start/default
     com.google.android.material.textfield.TextInputLayout dataToSendLayout;
     com.google.android.material.textfield.TextInputEditText dataToSend;
+    //private final String DEFAULT_URL = "https://www.google.de/maps/@34.7967917,-111.765671,3a,66.6y,15.7h,102.19t/data=!3m6!1e1!3m4!1sFV61wUEyLNwFi6zHHaKMcg!2e0!7i16384!8i8192";
+    private final String DEFAULT_URL = "https://github.com/AndroidCrypto?tab=repositories";
 
     public SendFragment() {
         // Required empty public constructor
@@ -94,24 +96,38 @@ public class SendFragment extends Fragment {
         tvTimestamp = getView().findViewById(R.id.tvTimestamp);
         rbTimestamp = getView().findViewById(R.id.rbTimestamp);
         rbMessage = getView().findViewById(R.id.rbMessage);
+        rbUrl = getView().findViewById(R.id.rbUrl);
 
-        dataToSendLayout = getView().findViewById(R.id.etMainDataToSendsLayout);
+        dataToSendLayout = getView().findViewById(R.id.etDataToSendsLayout);
         dataToSendLayout.setEnabled(false);
-        dataToSend = getView().findViewById(R.id.etMainDataToSend);
+        dataToSend = getView().findViewById(R.id.etDataToSend);
         dataToSendLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String dataToSendString = dataToSend.getText().toString();
                 if (TextUtils.isEmpty(dataToSendString)) {
-                    Toast.makeText(view.getContext(), "Enter a message to send", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Enter data to send", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String messageWithTimestamp = dataToSendString + " on " +
-                        Utils.getTimestamp();
-                Intent intent = new Intent(view.getContext(), MyHostApduService.class);
-                intent.putExtra("ndefMessage", messageWithTimestamp);
-                Toast.makeText(view.getContext(), "This message is send as NDEF message: " + messageWithTimestamp, Toast.LENGTH_SHORT).show();
-                requireActivity().startService(intent);
+                if (rbMessage.isChecked()) {
+                    String messageWithTimestamp = dataToSendString + " on " +
+                            Utils.getTimestamp();
+                    Intent intent = new Intent(view.getContext(), MyHostApduService.class);
+                    intent.putExtra("ndefMessage", messageWithTimestamp);
+                    Toast.makeText(view.getContext(), "This message is send as NDEF message: " + messageWithTimestamp, Toast.LENGTH_SHORT).show();
+                    requireActivity().startService(intent);
+                }
+                if (rbUrl.isChecked()) {
+                    // check for https:// at the beginning
+                    if (!dataToSendString.substring(0, 8).toLowerCase().equals("https://")) {
+                        Toast.makeText(view.getContext(), "The URL needs to start with https://", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = new Intent(view.getContext(), MyHostApduService.class);
+                    intent.putExtra("ndefUrl", dataToSendString);
+                    Toast.makeText(view.getContext(), "This URL is send as NDEF message: " + dataToSendString, Toast.LENGTH_SHORT).show();
+                    requireActivity().startService(intent);
+                }
             }
         });
 
@@ -120,6 +136,7 @@ public class SendFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (rbTimestamp.isChecked()) {
                     dataToSendLayout.setEnabled(false);
+                    dataToSend.setText("");
                     isTimestamp = true;
                     Toast.makeText(view.getContext(), "An actual is send as NDEF message", Toast.LENGTH_SHORT).show();
                 }
@@ -130,6 +147,18 @@ public class SendFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (rbMessage.isChecked()) {
                     dataToSendLayout.setEnabled(true);
+                    dataToSend.setText("");
+                    isTimestamp = false;
+                }
+            }
+        });
+
+        rbUrl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (rbUrl.isChecked()) {
+                    dataToSendLayout.setEnabled(true);
+                    dataToSend.setText(DEFAULT_URL);
                     isTimestamp = false;
                 }
             }

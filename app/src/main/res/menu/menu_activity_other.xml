@@ -1,0 +1,13 @@
+<!-- sample_menu.xml -->
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- https://fonts.google.com/icons?selected=Material+Icons -->
+
+    <item
+        android:id="@+id/action_clear"
+        android:title="clear data"
+        app:showAsAction="never"/>
+
+</menu>

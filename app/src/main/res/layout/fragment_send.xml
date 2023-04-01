@@ -62,8 +62,15 @@
                 android:text="use an individual message, a static timestamp will be added"
                 android:textSize="16sp" />
 
+            <RadioButton
+                android:id="@+id/rbUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="use an URL as content (https:\\\\...)"
+                android:textSize="16sp" />
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etMainDataToSendsLayout"
+                android:id="@+id/etDataToSendsLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +93,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMainDataToSend"
+                    android:id="@+id/etDataToSend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"

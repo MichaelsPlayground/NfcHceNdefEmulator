@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="24dp"
-        android:text="This application emulates a NFC card with a NDEF tag (sender) and a receiver for this NDEF tag (reader). Please choose with the menu below.\nThis app is using the official AID D2760000850101 for a tag that contains a NDEF message."
+        android:text="@string/home_description"
         android:textSize="24sp" />
 
 </FrameLayout>

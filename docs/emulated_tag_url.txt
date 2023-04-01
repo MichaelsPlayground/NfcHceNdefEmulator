@@ -1,0 +1,126 @@
+** TagInfo scan (version 4.25.6) 01-Apr.-23 12:23:38 **
+Report Type: -- IC INFO ------------------------------
+
+# IC manufacturer:
+Unknown manufacturer
+
+# IC type:
+Unknown IC implementing ISO/IEC 14443-4
+
+# NFC Forum NDEF-compliant tag:
+Type 4 Tag
+
+# Application information:
+Type 4 Tag v2 application present
+Proximity Payment System Environment (PPSE) present
+Visa credit card
+* Label: "Visa Debit"
+
+-- NDEF ------------------------------
+
+# NFC data set information:
+NDEF message containing 1 record
+Current message size: 46 bytes
+Maximum message size: 253 bytes
+NFC data set access: Read-Only
+
+# Record #1: URI record:
+Type Name Format: NFC Forum well-known type
+Short Record
+type: "U"
+protocol field: https://
+URI field: github.com/AndroidCrypto?tab=repositories
+Payload length: 42 bytes
+Payload data:
+
+[00] 04 67 69 74 68 75 62 2E 63 6F 6D 2F 41 6E 64 72 |.github.com/Andr|
+
+[10] 6F 69 64 43 72 79 70 74 6F 3F 74 61 62 3D 72 65 |oidCrypto?tab=re|
+
+[20] 70 6F 73 69 74 6F 72 69 65 73                   |positories      |
+
+
+# NDEF message:
+[00] D1 01 2A 55 04 67 69 74 68 75 62 2E 63 6F 6D 2F |..*U.github.com/|
+
+[10] 41 6E 64 72 6F 69 64 43 72 79 70 74 6F 3F 74 61 |AndroidCrypto?ta|
+
+[20] 62 3D 72 65 70 6F 73 69 74 6F 72 69 65 73       |b=repositories  |
+
+
+# Capability Container (CC) file content:
+Mapping version 2.0
+CC length: 15 bytes
+Maximum Le value: 59 bytes
+Maximum Lc value: 52 bytes
+NDEF File Control TLV:
+* Length: 6 bytes
+* NDEF file ID: 0xE104
+* Maximum NDEF data size: 255 bytes
+* NDEF access: Read-Only
+[0] 00 0F 20 00 3B 00 34 04 06 E1 04 00 FF 00 FF    |.. .;.4........ |
+
+
+# Type 4 Tag File Control Information (FCI):
+Type 4 Tag v2 application FCI: [none]
+CC file FCI: [none]
+NDEF file FCI: [none]
+
+# NDEF file contents:
+[00] 00 2E D1 01 2A 55 04 67 69 74 68 75 62 2E 63 6F |....*U.github.co|
+
+[10] 6D 2F 41 6E 64 72 6F 69 64 43 72 79 70 74 6F 3F |m/AndroidCrypto?|
+
+[20] 74 61 62 3D 72 65 70 6F 73 69 74 6F 72 69 65 73 |tab=repositories|
+
+
+-- EXTRA ------------------------------
+
+# File Control Information:
+Proximity Payment System Environment (PPSE) present
+0x6F33840E325041592E5359532E4444463031A521BF0C1E611C4F07A0000000031010500A566973612044656269749F0A0400010101 |o3..2PAY.SYS.DDF01.!...a.O........P.Visa Debit.......|
+
+# TagInfo Version:
+Version :4.25.6
+
+# Device Info:
+Device Model :samsung ( SM-A520F )
+Android OS Version :8.0.0
+
+-- FULL SCAN ------------------------------
+
+# Technologies supported:
+ISO/IEC 7816-4 compatible
+ISO/IEC 14443-4 (Type A) compatible
+ISO/IEC 14443-3 (Type A) compatible
+
+
+# Android technology information:
+Tag description:
+* TAG: Tech [android.nfc.tech.IsoDep, android.nfc.tech.NfcA, android.nfc.tech.Ndef]
+* Maximum transceive length: 65279 bytes
+* Default maximum transceive time-out: 2000 ms
+* Extended length APDUs supported
+* Maximum transceive length: 253 bytes
+* Default maximum transceive time-out: 618 ms
+
+
+# Detailed protocol information:
+ID: 08:A7:DA:E4
+* Random ID
+ATQA: 0x0803
+SAK: 0x20
+ATS: 0x0578807002
+* Max. accepted frame size: 256 bytes (FSCI: 8)
+* Supported receive rates:
+	- 106 kbit/s (DR: 1)
+* Supported send rates:
+	- 106 kbit/s (DS: 1)
+* SFGT: 302.0 us  (SFGI: 0)
+* FWT: 38.66 ms  (FWI: 7)
+* NAD not supported
+* CID supported
+* Historical bytes: [none]
+
+--------------------------------------
+

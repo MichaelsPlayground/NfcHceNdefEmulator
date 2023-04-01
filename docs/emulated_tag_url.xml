@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scan>
+	<version>4.25.6</version>
+	<date>2023-04-01 12:21:46</date>
+	<title>Unknown IC implementing ISO/IEC 14443-4 tag as Type 4 Tag</title>
+	<uid nxp="false">08:A7:DA:E4</uid>
+	<hasndef>true</hasndef>
+	<ndef>D1012A55046769746875622E636F6D2F416E64726F696443727970746F3F7461623D7265706F7369746F72696573</ndef>
+	<section>
+		<subsection title="IC manufacturer">
+			<block type="text">
+	<content>Unknown manufacturer</content>
+</block>
+		</subsection>
+		<subsection title="IC type">
+			<block type="text">
+	<content>Unknown IC implementing ISO/IEC 14443-4</content>
+</block>
+		</subsection>
+		<subsection title="NFC Forum NDEF-compliant tag">
+			<block type="text">
+	<content>Type 4 Tag</content>
+</block>
+		</subsection>
+		<subsection title="Application information">
+			<block type="text">
+	<content>Type 4 Tag v2 application present
+Proximity Payment System Environment (PPSE) present
+Visa credit card
+‣ Label: &quot;Visa Debit&quot;</content>
+</block>
+		</subsection>
+	</section>
+	<section>
+		<subsection title="NFC data set information">
+			<block type="text">
+	<content>NDEF message containing 1 record
+Current message size: 46 bytes
+Maximum message size: 253 bytes
+NFC data set access: Read-Only</content>
+</block>
+		</subsection>
+		<subsection title="Record #1: URI record">
+			<block type="text">
+	<content><size size="12">Type Name Format: NFC Forum well-known type<hexoutput> (1)</hexoutput>
+Short Record</size></content>
+</block><block type="text">
+	<content><mono>type: "U"
+</mono>protocol field: <url link="https://github.com/AndroidCrypto?tab=repositories">https://</url><hexoutput> (0x04)</hexoutput>
+URI field: <url link="https://github.com/AndroidCrypto?tab=repositories">github.com/AndroidCrypto?tab=repositories</url></content>
+</block>
+<block type="text">
+	<content>Payload length: 42 bytes</content>
+</block>
+<block type="text">
+	<content>Payload data:
+</content>
+</block>
+<block type="File">
+	<address>0</address>
+	<data>04 67 69 74 68 75 62 2E 63 6F 6D 2F 41 6E 64 72</data>
+</block>
+<block type="File">
+	<address>16</address>
+	<data>6F 69 64 43 72 79 70 74 6F 3F 74 61 62 3D 72 65</data>
+</block>
+<block type="File">
+	<address>32</address>
+	<data>70 6F 73 69 74 6F 72 69 65 73</data>
+</block>
+		</subsection>
+		<subsection title="NDEF message">
+			<block type="File">
+	<address>0</address>
+	<data>D1 01 2A 55 04 67 69 74 68 75 62 2E 63 6F 6D 2F</data>
+</block>
+<block type="File">
+	<address>16</address>
+	<data>41 6E 64 72 6F 69 64 43 72 79 70 74 6F 3F 74 61</data>
+</block>
+<block type="File">
+	<address>32</address>
+	<data>62 3D 72 65 70 6F 73 69 74 6F 72 69 65 73</data>
+</block>
+		</subsection>
+		<subsection title="Capability Container (CC) file content">
+			<block type="text">
+	<content>Mapping version 2.0
+CC length: 15 bytes
+Maximum Le value: 59 bytes<hexoutput> (0x3B)</hexoutput>
+Maximum Lc value: 52 bytes<hexoutput> (0x34)</hexoutput>
+NDEF File Control TLV:
+‣ Length: 6 bytes
+‣ NDEF file ID: 0xE104
+‣ Maximum NDEF data size: 255 bytes<hexoutput> (0xFF)</hexoutput>
+‣ NDEF access: Read-Only<hexoutput> (0x00FF)</hexoutput></content>
+</block><block type="File">
+	<address addrwidth="1">0</address>
+	<data>00 0F 20 00 3B 00 34 04 06 E1 04 00 FF 00 FF</data>
+</block>
+		</subsection>
+		<subsection title="Type 4 Tag File Control Information (FCI)">
+			<block type="text">
+	<content>Type 4 Tag v2 application FCI: [none]
+CC file FCI: [none]
+NDEF file FCI: [none]</content>
+</block>
+		</subsection>
+		<subsection title="NDEF file contents">
+			<block type="File">
+	<address>0</address>
+	<data>00 2E D1 01 2A 55 04 67 69 74 68 75 62 2E 63 6F</data>
+</block>
+<block type="File">
+	<address>16</address>
+	<data>6D 2F 41 6E 64 72 6F 69 64 43 72 79 70 74 6F 3F</data>
+</block>
+<block type="File">
+	<address>32</address>
+	<data>74 61 62 3D 72 65 70 6F 73 69 74 6F 72 69 65 73</data>
+</block>
+		</subsection>
+	</section>
+	<section>
+		<subsection title="File Control Information">
+			<block type="text">
+	<content>Proximity Payment System Environment (PPSE) present
+<mono>0x6F33840E325041592E5359532E4444463031A521BF0C1E611C4F07A0000000031010500A566973612044656269749F0A0400010101 |o3··2PAY.SYS.DDF01·!···a·O········P·Visa Debit·······|</mono></content>
+</block>
+		</subsection>
+		<subsection title="TagInfo Version">
+			<block type="text">
+	<content>Version :4.25.6</content>
+</block>
+		</subsection>
+		<subsection title="Device Info">
+			<block type="text">
+	<content>Device Model :samsung ( SM-A520F )
+Android OS Version :8.0.0</content>
+</block>
+		</subsection>
+	</section>
+	<section>
+		<subsection title="Technologies supported">
+			<block type="text">
+	<content>ISO/IEC 7816-4 compatible
+ISO/IEC 14443-4 (Type A) compatible
+ISO/IEC 14443-3 (Type A) compatible
+</content>
+</block>
+		</subsection>
+		<subsection title="Android technology information">
+			<block type="text">
+	<content>Tag description:
+‣ TAG: Tech [android.nfc.tech.IsoDep, android.nfc.tech.NfcA, android.nfc.tech.Ndef]
+‣ Maximum transceive length: 65279 bytes
+‣ Default maximum transceive time-out: 2000 ms
+‣ Extended length APDUs supported
+‣ Maximum transceive length: 253 bytes
+‣ Default maximum transceive time-out: 618 ms
+<hexoutput>MIFARE Classic support present in Android</hexoutput></content>
+</block>
+		</subsection>
+		<subsection title="Detailed protocol information">
+			<block type="text">
+	<content>ID: 08:A7:DA:E4
+‣ Random ID
+ATQA: 0x0803
+SAK: 0x20
+ATS: 0x0578807002
+‣ Max. accepted frame size: 256 bytes (FSCI: 8)
+‣ Supported receive rates:
+	• 106 kbit/s (DR: 1)
+‣ Supported send rates:
+	• 106 kbit/s (DS: 1)
+‣ SFGT: 302.0 µs  (SFGI: 0)
+‣ FWT: 38.66 ms  (FWI: 7)
+‣ NAD not supported
+‣ CID supported
+‣ Historical bytes: [none]</content>
+</block>
+		</subsection>
+	</section>
+</scan>

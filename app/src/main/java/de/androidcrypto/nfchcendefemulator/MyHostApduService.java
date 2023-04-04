@@ -145,7 +145,7 @@ public class MyHostApduService extends HostApduService {
     }
 
     /**
-     * emulates a NFC Forum Tag Type 4
+     * emulates an NFC Forum Tag Type 4
      */
     @Override
     public byte[] processCommandApdu(byte[] commandApdu, Bundle extras) {
